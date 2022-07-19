@@ -25,7 +25,7 @@ namespace web_api.Services
             return await dataBase.QueryAsync<Employees>(sql, new { });
         }
 
-        public async Task<bool> Save(Employees employee, int[] departments )
+        public async Task<bool> Save(Employees employee)
         {
             var dataBase = dbConnection();
             string sql = "INSERT INTO employees (created_by, age, email, name, position, surname) VALUES (@Created_by, @Age, @Email, @Name, @Position, @Surname)";
@@ -43,7 +43,7 @@ namespace web_api.Services
             {
                 string sqlLastEmployee = @"SELECT ""id"" FROM employees ORDER BY ""id"" ASC offset ((select count(*) from employees)-1)";
                 var lastId = await dataBase.QueryAsync(sqlLastEmployee, new { });
-                foreach (var item in departments)
+                foreach (var item in employee.Departments)
                 {
                     string sqlDepartments = "INSERT INTO departments_employees (created_by, id_department, id_employee) VALUES ('admin', @Id_department, @Id_employee)";
                     var result2 = await dataBase.ExecuteAsync(sqlDepartments, new
@@ -56,7 +56,7 @@ namespace web_api.Services
             return result2 > 0;
         }
 
-        public async Task<bool> Update(int id, Employees employee, int[] departments)
+        public async Task<bool> Update(int id, Employees employee)
         {
             var dataBase = dbConnection();
             string sql = @"UPDATE employees SET
@@ -87,7 +87,7 @@ namespace web_api.Services
                 var deleteResult = await dataBase.ExecuteAsync(deleteDepartments, new { Id = id});
                 if (deleteResult > 0)
                 {
-                    foreach (var item in departments)
+                    foreach (var item in employee.Departments)
                     {
                         string sqlDepartments = "INSERT INTO departments_employees (created_by, id_department, id_employee) VALUES ('admin', @Id_department, @Id_employee)";
                         var result2 = await dataBase.ExecuteAsync(sqlDepartments, new
@@ -115,9 +115,9 @@ namespace web_api.Services
 public interface IEmployeesServices
 {
     Task<IEnumerable<Employees>> Get();
-    Task<bool> Save(Employees employee, int[] departments);
+    Task<bool> Save(Employees employee);
 
-    Task<bool> Update(int id, Employees employee, int[] departments);
+    Task<bool> Update(int id, Employees employee);
 
     Task<bool> Delete(int id);
 }

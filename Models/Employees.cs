@@ -16,4 +16,5 @@ public class Employees {
     public string? Name { get; set; }
     public string? Position { get; set; }
     public string? Surname { get; set; }
+    public int[]? Departments { get; set; }
 }
