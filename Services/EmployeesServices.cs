@@ -39,21 +39,25 @@ namespace web_api.Services
                 employee.Surname
             });
 
-            if (result > 0)
+            /*if (result > 0)
             {
                 string sqlLastEmployee = @"SELECT ""id"" FROM employees ORDER BY ""id"" ASC offset ((select count(*) from employees)-1)";
-                var lastId = await dataBase.QueryAsync(sqlLastEmployee, new { });
+                var lastId = await dataBase.ExecuteReaderAsync(sqlLastEmployee, new { });
+                int last;
+                await dataBase.OpenAsync();
+                await using var cmd = new NpgsqlCommand(@"SELECT ""id"" FROM employees ORDER BY ""id"" ASC offset ((select count(*) from employees)-1)", dataBase);
+                await using var reader = cmd.ExecuteReader().GetString(0);
                 foreach (var item in employee.Departments)
                 {
                     string sqlDepartments = "INSERT INTO departments_employees (created_by, id_department, id_employee) VALUES ('admin', @Id_department, @Id_employee)";
                     var result2 = await dataBase.ExecuteAsync(sqlDepartments, new
                     {
                         Id_department = item,
-                        id_employee = lastId
+                        id_employee = 1
                     });
                 }
-            }   
-            return result2 > 0;
+            }  */ 
+            return result > 0;
         }
 
         public async Task<bool> Update(int id, Employees employee)
@@ -85,20 +89,20 @@ namespace web_api.Services
             {
                 string deleteDepartments = @"DELETE FROM departments_employees WHERE id_employee = @Id";
                 var deleteResult = await dataBase.ExecuteAsync(deleteDepartments, new { Id = id});
-                if (deleteResult > 0)
-                {
+                /*if (deleteResult > 0)
+                {*/
                     foreach (var item in employee.Departments)
                     {
                         string sqlDepartments = "INSERT INTO departments_employees (created_by, id_department, id_employee) VALUES ('admin', @Id_department, @Id_employee)";
                         var result2 = await dataBase.ExecuteAsync(sqlDepartments, new
                         {
                             Id_department = item,
-                            id_employee = id
+                            Id_employee = id
                         });
                     }
-                }
+                //}
             }
-            return result2 > 0;
+            return result > 0;
         }
 
         public async Task<bool> Delete(int id)

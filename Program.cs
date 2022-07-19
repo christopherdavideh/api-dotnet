@@ -13,6 +13,8 @@ builder.Services.AddCors();
 var postgresConnection = new CompanyContext(builder.Configuration.GetConnectionString(("PostgresConnection")));
 builder.Services.AddSingleton(postgresConnection);
 builder.Services.AddScoped<IEnterprisesServices, EnterprisesServices>();
+builder.Services.AddScoped<IDepartmentsServices, DepartmentsServices>();
+builder.Services.AddScoped<IEmployeesServices, EmployeesServices>();
 
 var app = builder.Build();
 
