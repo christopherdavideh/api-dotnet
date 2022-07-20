@@ -64,7 +64,7 @@ public class EmployeesController : ControllerBase
     }
 
     // DELETE api/<EnterprisesController>/5
-    [HttpDelete]
+    [HttpPut]
     [Route("[controller]/deleteEmployees/{id}")]
     public async Task<IActionResult> Delete(int id)
     {

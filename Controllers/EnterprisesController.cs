@@ -64,7 +64,7 @@ public class EnterprisesController : ControllerBase
     }
 
     // DELETE api/<EnterprisesController>/5
-    [HttpDelete]
+    [HttpPut]
     [Route("[controller]/deleteEnterprises/{id}")]
     public async Task<IActionResult> Delete(int id)
     {
